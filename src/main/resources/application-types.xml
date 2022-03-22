@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="flight-xml" format="xml">
+      <types:example format="xml" element="Flights" location="flights.xml"/>
+    </types:type>
+    <types:type name="flights-flatfile" format="flatfile">
+      <types:shape format="flatfile" element="BatchReq" location="schemas/flightdetails.ffd"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#15f66f68-43a9-4db4-aaee-e89c257c3eee">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="flight-xml"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="flights-flatfile"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

@@ -1,0 +1,58 @@
+form: FLATFILE
+structures:
+- id: 'BatchReq'
+  name: Batch Request
+  data:
+  - { idRef: 'RQH' }
+  - groupId: 'Batch'
+    count: '>1'
+    items:
+    - { idRef: 'BCH' }
+    - { idRef: 'TDR', count: '>1' }
+    - { idRef: 'BCF' }
+  - { idRef: 'RQF' }
+segments:
+- id: 'RQH'
+  name: "Request File Header Record"
+  values:
+  - { name: 'Record Type', type: String, length: 3, tagValue: 'RQH' }
+  - { name: 'File Creation Date', type: Date, length: 8 }
+  - { name: 'File Creation Time', type: Time, length: 4 }
+  - { name: 'Unique File Identifier', type: String, length: 10 }
+  - { name: 'Currency', type: String, length: 3 }
+- id: 'BCH'
+  name: "Batch Header Record"
+  values:
+  - { name: 'Record Type', type: String, length: 3, tagValue: 'BAT' }
+  - { name: 'Sequence Number', type: Integer, format: { justify: zeroes }, length: 6 }
+  - { name: 'Batch Function', type: String, length: 1, tagValue: 'H' }
+  - { name: 'Company Name', type: String, length: 30 }
+  - { name: 'Unique Batch Identifier', type: String, length: 10 }
+- id: 'TDR'
+  name: "Transaction Detail Record"
+  values:
+  - { name: 'Record Type', type: String, length: 3, tagValue: 'BAT' }
+  - { name: 'Sequence Number', type: Integer, format: { justify: zeroes }, length: 6 }
+  - { name: 'Batch Function', type: String, length: 1, tagValue: 'D' }
+  - { name: 'Account Number', type: String, length: 10 }
+  - { name: 'Amount', type: Integer, format: { justify: zeroes }, length: 10 }
+  - { name: 'Type', type: String, length: 2 }
+- id: 'BCF'
+  name: "Batch Footer Record"
+  values:
+  - { name: 'Record Type', type: String, length: 3, tagValue: 'BAT' }
+  - { name: 'Sequence Number', type: Integer, format: { justify: zeroes }, length: 6 }
+  - { name: 'Batch Function', type: String, length: 1, tagValue: 'T' }
+  - { name: 'Batch Transaction Amount', type: Integer, format: { justify: zeroes }, length: 10 }
+  - { name: 'Type', type: String, length: 2 }
+  - { name: 'Batch Transaction Count', type: Integer, format: { justify: zeroes }, length: 6 }
+  - { name: 'Unique Batch Identifier', type: String, length: 10 }
+- id: 'RQF'
+  name: "Request File Footer Record"
+  values:
+  - { name: 'Record Type', type: String, length: 3, tagValue: 'RQF' }
+  - { name: 'File Batch Count', type: Integer, format: { justify: zeroes }, length: 4 }
+  - { name: 'File Transaction Count', type: Integer, format: { justify: zeroes }, length: 6 }
+  - { name: 'File Transaction Amount', type: Integer, format: { justify: zeroes }, length: 12 }
+  - { name: 'Type', type: String, length: 2 }
+  - { name: 'Unique File Identifier', type: String, length: 10 }

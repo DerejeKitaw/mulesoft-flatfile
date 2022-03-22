@@ -1,0 +1,5 @@
+fileReadPath: "flatfile"
+schemaPath: "flatfileschema.ffd"
+fileWritePath: "flatfilenew"
+jsonFileReadPath: "flatFileJson.json"
+fileWorkingDir: "#['${mule.home}/apps/${app.name}/']"

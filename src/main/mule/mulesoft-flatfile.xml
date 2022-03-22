@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<file:config name="File_Config" doc:name="File Config">
+		<file:connection workingDir="${fileWorkingDir}" />
+	</file:config>
+	<configuration-properties
+		doc:name="Configuration properties" file="dev.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2088fc68-24cd-488a-9f4e-2eb820579368" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="ReadFlatfileFlow" initialState="stopped">
+		<scheduler doc:name="Scheduler">
+			<scheduling-strategy>
+				<fixed-frequency frequency="10000" />
+			</scheduling-strategy>
+		</scheduler>
+		<file:read doc:name="Read flat file"
+			config-ref="File_Config" path="${fileReadPath}"
+			outputMimeType='application/flatfile; schemapath=${schemaPath}' />
+		<ee:transform doc:name="Transform to JSON">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]>
+				</ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger"
+			message='#["\n"]Reading flat file from: ${mule.home}/apps/${app.name}/${fileReadPath}#["\n"]#[payload]' />
+		<file:read doc:name="Read" doc:id="6c8777d5-8cad-457b-a643-bf7e87b3ec66" config-ref="File_Config" path="${fileReadPath}" outputMimeType="application/flatfile; schemapath=flatfileschema2.ffd"/>
+		<ee:transform doc:name="Transform Message" doc:id="1a0a1aa0-959a-40ee-8e82-c21a10af105f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Copy_of_Logger" doc:id="899e8fae-bb4d-4bc4-bf31-79c5ad370c61" message='#["\n"]Reading flat file from: ${mule.home}/apps/${app.name}/${fileReadPath}#["\n"]#[payload]' />
+	
+</flow>
+	<flow name="mulesoft-flatfileFlow" doc:id="d3c9bae2-7d35-4dae-a297-9b56609b00f2" >
+		<http:listener doc:name="Listener" doc:id="27032326-9a9a-46e1-b371-53dce92f77fc" config-ref="HTTP_Listener_config" path="/read"/>
+		<ee:transform doc:name="Transform Message" doc:id="15f66f68-43a9-4db4-aaee-e89c257c3eee" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/flatfile schemaPath = "schemas/flightdetails.ffd"
+---
+{
+	RQH: {
+		"File Creation Date": now() as String {
+			format: "yyyyMMdd"
+		},
+		"File Creation Time": now() as String {
+			format: "HHmmss"
+		}
+	},
+	Batch: [{
+		BCH: {
+			"Flight Name": payload.Flights.FlightName,
+			Capacity: payload.Flights.Capacity as String,
+			Maker: payload.Flights.Maker,
+			Source: payload.Flights.Source,
+			Destination: payload.Flights.Destination
+		},
+		PSN: payload.Flights.Passengers.*Passenger map {
+			Name: $.Name,
+			Age: $.Age as String,
+			Class: $.Class,
+			"Seat Number": $.SeatNumber,
+			Cost: $.Cost as String
+		}
+	}],
+	RQF: {
+		"Total Passengers": sizeOf( payload.Flights.Passengers)
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9e27e4f5-985d-4b5b-b253-42974971d0ff" message="#[payload]"/>
+	</flow>
+</mule>

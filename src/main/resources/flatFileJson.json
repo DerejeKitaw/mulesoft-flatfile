@@ -1,0 +1,91 @@
+{
+  "Batch": [
+    {
+      "TDR": [
+        {
+          "Record Type": "BAT",
+          "Sequence Number": 2,
+          "Amount": 32876,
+          "Account Number": "0123456789",
+          "Batch Function": "D",
+          "Type": "CR"
+        },
+        {
+          "Record Type": "BAT",
+          "Sequence Number": 3,
+          "Amount": 87326,
+          "Account Number": "0123456788",
+          "Batch Function": "D",
+          "Type": "CR"
+        }
+      ],
+      "BCF": {
+        "Record Type": "BAT",
+        "Sequence Number": 4,
+        "Batch Transaction Count": 2,
+        "Batch Transaction Amount": 120202,
+        "Unique Batch Identifier": "A000000001",
+        "Batch Function": "T",
+        "Type": "CR"
+      },
+      "BCH": {
+        "Record Type": "BAT",
+        "Company Name": "ACME RESEARCH",
+        "Sequence Number": 1,
+        "Unique Batch Identifier": "A000000001",
+        "Batch Function": "H"
+      }
+    },
+    {
+      "TDR": [
+        {
+          "Record Type": "BAT",
+          "Sequence Number": 6,
+          "Amount": 3582,
+          "Account Number": "1234567890",
+          "Batch Function": "D",
+          "Type": "DB"
+        },
+        {
+          "Record Type": "BAT",
+          "Sequence Number": 7,
+          "Amount": 256,
+          "Account Number": "1234567891",
+          "Batch Function": "D",
+          "Type": "CR"
+        }
+      ],
+      "BCF": {
+        "Record Type": "BAT",
+        "Sequence Number": 8,
+        "Batch Transaction Count": 2,
+        "Batch Transaction Amount": 3326,
+        "Unique Batch Identifier": "A000000002",
+        "Batch Function": "T",
+        "Type": "DB"
+      },
+      "BCH": {
+        "Record Type": "BAT",
+        "Company Name": "AJAX EXPLOSIVES",
+        "Sequence Number": 5,
+        "Unique Batch Identifier": "A000000002",
+        "Batch Function": "H"
+      }
+    }
+  ],
+  "RQF": {
+    "Record Type": "RQF",
+    "File Batch Count": 2,
+    "File Transaction Count": 8,
+    "File Transaction Amount": 116876,
+    "Unique File Identifier": "A000000001",
+    "Type": "CR"
+  },
+  "RQH": {
+    "Record Type": "RQH",
+    "File Creation Time": "10:10:00",
+    "File Creation Date": "2018-09-01",
+    "Currency": "USD",
+    "Unique File Identifier": "A000000001"
+  }
+}
